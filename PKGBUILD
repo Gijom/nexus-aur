@@ -5,7 +5,7 @@
 
 # Maintainer: Guillaume Chanel <guillaume.chanel@unige.ch>
 pkgname=nexus-client-git
-pkgver=0.0.0
+pkgver=1.6.6
 pkgrel=1
 epoch=
 pkgdesc="Client for the virtual desktop infrastructure"
@@ -24,13 +24,13 @@ backup=()  # check if there are any configuration files in /etc that need to be 
 options=()
 install=
 changelog=
-source=('$pkgname::git+$url')
+source=("$pkgname"::git+ssh://git@ssh.hesge.ch:10572/flg_projects/nexus_vdi/nexus-client.git)  # TODO: to change with public repo
 noextract=()
 md5sums=('SKIP')
 validpgpkeys=()
 
-prepare() {
-}
+#prepare() {
+#}
 
 build() {
     cd "$pkgname/src/nexus-cli"
@@ -45,11 +45,12 @@ build() {
     fi
 }
 
-check() {
-}
+#check() {
+#}
 
 package() {
     #TODO
+    mkdir -p "$pkgdir/usr/bin"
     if [ "$CARCH" == "x86_64" ]; then
         cp "$pkgname/src/nexus-cli/build/amd64/linux/nexus-cli" "$pkgdir/usr/bin"
     else
