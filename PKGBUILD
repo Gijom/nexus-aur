@@ -13,7 +13,7 @@ arch=('x86_64' 'aarch64')
 url="https://gitedu.hesge.ch/flg_projects/nexus_vdi/nexus-client"
 license=('unknown')
 groups=()
-depends=()  # depends on go but is it a dependency or just for build ? -> makedepends, others are needed ?
+depends=()
 makedepends=('git' 'go' 'upx')
 checkdepends=()
 optdepends=()
@@ -33,32 +33,21 @@ validpgpkeys=()
 #}
 
 build() {
-    cd "$pkgname/src/nexus-cli"
-    if [ "$CARCH" == "x86_64" ]; then
-        make build OS=linux ARCH=amd64
-    else
-        if [ "$CARCH" == "aarch64" ]; then
-            make build OS=linux ARCH=arm64
-        else
-            echo "$CARCH not supported"  # should not happen
-        fi
-    fi
+    NEXUSARCH=${CARCH/x86_64/amd64}
+    NEXUSARCH=${NEXUSARCH/aarch64/arm64}
+    echo "The following arachitecture has been detected: '$NEXUSARCH'"
+    make -C "$pkgname/src/nexus-cli" build OS=linux ARCH=$NEXUSARCH
+    make -C "$pkgname/src/nexush" build OS=linux ARCH=$NEXUSARCH
 }
 
 #check() {
 #}
 
 package() {
-    #TODO
+    #TODO: how to avoid repeating the two lines below ?
+    NEXUSARCH=${CARCH/x86_64/amd64}
+    NEXUSARCH=${NEXUSARCH/aarch64/arm64}
     mkdir -p "$pkgdir/usr/bin"
-    if [ "$CARCH" == "x86_64" ]; then
-        cp "$pkgname/src/nexus-cli/build/amd64/linux/nexus-cli" "$pkgdir/usr/bin"
-    else
-        if [ "$CARCH" == "aarch64" ]; then
-            cp "$pkgname/src/nexus-cli/build/arm64/linux/nexus-cli" "$pkgdir/usr/bin"
-        else
-            echo "$CARCH not supported"  # should not happen
-        fi
-    fi
-    # TODO: copy file damn it !
+    cp "$pkgname/src/nexus-cli/build/${NEXUSARCH}/linux/nexus-cli" "$pkgdir/usr/bin"
+    cp "$pkgname/src/nexush/build/${NEXUSARCH}/linux/nexush" "$pkgdir/usr/bin"
 }
