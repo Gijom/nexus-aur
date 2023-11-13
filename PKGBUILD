@@ -36,8 +36,8 @@ build() {
     NEXUSARCH=${CARCH/x86_64/amd64}
     NEXUSARCH=${NEXUSARCH/aarch64/arm64}
     echo "The following arachitecture has been detected: '$NEXUSARCH'"
-    make -C "$pkgname/src/nexus-cli" build OS=linux ARCH=$NEXUSARCH
-    make -C "$pkgname/src/nexush" build OS=linux ARCH=$NEXUSARCH
+    make -C "$pkgname/src/client/nexus-cli" build OS=linux ARCH=$NEXUSARCH
+    make -C "$pkgname/src/client/nexush" build OS=linux ARCH=$NEXUSARCH
 }
 
 #check() {
@@ -48,6 +48,6 @@ package() {
     NEXUSARCH=${CARCH/x86_64/amd64}
     NEXUSARCH=${NEXUSARCH/aarch64/arm64}
     mkdir -p "$pkgdir/usr/bin"
-    cp "$pkgname/src/nexus-cli/build/${NEXUSARCH}/linux/nexus-cli" "$pkgdir/usr/bin"
-    cp "$pkgname/src/nexush/build/${NEXUSARCH}/linux/nexush" "$pkgdir/usr/bin"
+    cp "$pkgname/src/client/nexus-cli/build/${NEXUSARCH}/linux/nexus-cli" "$pkgdir/usr/bin"
+    cp "$pkgname/src/client/nexush/build/${NEXUSARCH}/linux/nexush" "$pkgdir/usr/bin"
 }
